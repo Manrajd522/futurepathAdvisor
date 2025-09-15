@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Form App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .data-grid {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            font-weight: 600;
+            color: #333;
+        }
+
+        .data-table tr:hover {
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+            text-align: center;
+            animation: slideDown 0.3s ease;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2E7D32;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #C62828;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Sheets Manager</h1>
+            <p>Store and retrieve data from Google Sheets seamlessly</p>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('add')">➕ Add Data</button>
+                <button class="tab-button" onclick="switchTab('view')">📋 View Data</button>
+            </div>
+
+            <div id="add-tab" class="tab-content active">
+                <form id="dataForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherName">Father Name</label>
+                            <input type="text" id="fatherName" name="fatherName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="CertificateNO">Certificate NO.</label>
+                            <input type="text" id="CertificateNO" name="CertificateNO" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empId">Student ID / Roll No</label>
+                            <input type="text" id="empId" name="empId">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="joiningDate">Joining / Admission Date</label>
+                            <input type="date" id="joiningDate" name="joiningDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="completedate">Complete date</label>
+                            <input type="date" id="completedate" name="completedate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="examDate">Exam Date</label>
+                            <input type="date" id="examDate" name="examDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Course Name</label>
+                            <input type="text" id="course" name="course">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="grade">Grade</label>
+                            <input type="text" id="grade" name="grade" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="issuedate">Issued Date</label>
+                            <input type="text" id="issuedate" name="issuedate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" name="address" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">💾 Save to Sheets</button>
+                </form>
+            </div>
+
+            <div id="view-tab" class="tab-content">
+                <button onclick="loadData()" class="btn" id="loadBtn">
+                    🔄 Load Data
+                </button>
+
+                <div id="dataContainer" class="data-grid">
+                    <p style="text-align: center; color: #666; font-style: italic;">Click "Load Data" to fetch records from Google Sheets</p>
+                </div>
+            </div>
+
+            <div id="statusMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        const backendURL = "http://localhost:3000";
+
+        // Submit form data
+        document.getElementById("dataForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = Object.fromEntries(new FormData(form).entries());
+            
+            const submitBtn = document.getElementById("submitBtn");
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span>Saving...';
+            
+            try {
+                const res = await fetch(`${backendURL}/add`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData),
+                });
+
+                const result = await res.json();
+                
+                if (res.ok) {
+                    const params = new URLSearchParams(formData).toString();
+                     window.open("index.html?" + params, "_blank");
+                    showStatus("✅ Data submitted successfully!", "success");
+                    form.reset();
+                } else {
+                    showStatus(`❌ Failed to submit data: ${result.error || 'Unknown error'}`, "error");
+                }
+            } catch (err) {
+                console.error("Error:", err);
+                showStatus("⚠️ Error submitting data. Please check if the server is running.", "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '💾 Save to Sheets';
+            }
+        });
+
+        // Load data
+        async function loadData() {
+            const container = document.getElementById("dataContainer");
+            const loadBtn = document.getElementById("loadBtn");
+            
+            container.innerHTML = "<p style='text-align:center;'>⏳ Loading data...</p>";
+            loadBtn.disabled = true;
+            loadBtn.innerHTML = '<span class="loading"></span>Loading...';
+
+            try {
+                const res = await fetch(`${backendURL}/data`);
+                const data = await res.json();
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    container.innerHTML = "<p style='text-align:center;'>No data found.</p>";
+                    return;
+                }
+
+                // Build table
+                let table = `
+                    <table class="data-table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Father Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Gender</th>
+                                <th>DOB</th>
+                                <th>Certificate No</th>
+                                <th>Roll No</th>
+                                <th>Joining Date</th>
+                                <th>Complete Date</th>
+                                <th>Exam Date</th>
+                                <th>Course</th>
+                                <th>Grade</th>
+                                <th>Issue Date</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(row => `
+                                <tr>
+                                    <td>${row.fullName || ""}</td>
+                                    <td>${row.fatherName || ""}</td>
+                                    <td>${row.email || ""}</td>
+                                    <td>${row.phone || ""}</td>
+                                    <td>${row.gender || ""}</td>
+                                    <td>${row.dob || ""}</td>
+                                    <td>${row.CertificateNO || ""}</td>
+                                    <td>${row.empId || ""}</td>
+                                    <td>${row.joiningDate || ""}</td>
+                                    <td>${row.completedate || ""}</td>
+                                    <td>${row.examDate || ""}</td>
+                                    <td>${row.course || ""}</td>
+                                    <td>${row.grade || ""}</td>
+                                    <td>${row.issuedate || ""}</td>
+                                    <td>${row.address || ""}</td>
+                                </tr>`
+                            ).join("")}
+                        </tbody>
+                    </table>
+                `;
+
+                container.innerHTML = table;
+                showStatus("✅ Data loaded successfully!", "success");
+                
+            } catch (err) {
+                console.error("Error:", err);
+                container.innerHTML = "<p style='color:red; text-align:center;'>⚠️ Error loading data. Please check if the server is running.</p>";
+                showStatus("⚠️ Error loading data", "error");
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.innerHTML = '🔄 Load Data';
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById("statusMessage");
+            statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                statusDiv.innerHTML = "";
+            }, 5000);
+        }
+
+        // Tab switching function
+        function switchTab(tab) {
+            document.querySelectorAll(".tab-button").forEach((btn) => btn.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
+
+            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add("active");
+            document.getElementById(`${tab}-tab`).classList.add("active");
+        }
+    </script>
+</body>
+</html>

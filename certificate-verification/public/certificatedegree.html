@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate of Completion</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- You might want to link a custom font here, e.g., Google Fonts for a formal look -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="certificate-body" class="main-body">
+    <div class="certificate-container">
+      <header class="certificate-header">
+        <div class="logos img ">
+          <img src="erasebg-transformed.png" alt="Institute Logo">
+        </div>
+        <div class="header-details">
+          <h1 class="institute-name">FUTURE PATH ADVISOR, BARETA</h1>
+          <p>Regd. Under: Got. of India(MSME) & Department of Labour Govt. of Punjab</p>
+          <p>AN ISO 9001:2015 CERTIFIED
+          <p> Regd. No. 20250523317</p>
+          <!-- <p>Near HDFC Bank, Bareta, Distt. Mansa (Pb), 151501</p>
+      <p>Email: futurepathadvisoroffice@gmail.com</p><p> Contact Number: 97791-29690, 98789-75877</p>
+     -->
+        </div>
+      </header>
+
+      <section class="certificate-body">
+        <h2 class="main-title">CERTIFICATE OF COMPLETION</h2>
+        <div class="reg-roll-numbers">
+          <p>Certificate NO : <strong id="certificate_no"></strong></p>
+          <p>ROLL NO : <strong id="rollno"></strong></p>
+        </div>
+        <p class="certification-text">
+          This is to certify That <strong id="studentName"></strong> Son/ daughter of <strong id="fathername"></strong>
+          has Successfully completed the course and have passed the prescribed examination held
+          on <strong id="examDate"></strong> has been conferred the <strong id="course"></strong> duration <strong
+            id="duration"></strong>
+          From <strong id="joingdate"></strong> To <strong id="completedate"></strong> and has secured with Grade"
+          <strong id="grade"></strong>".
+        </p>
+        <p class="issue-date">Issued on <strong id="issuedate"></strong></p>
+      </section>
+
+      <footer class="certificate-footer">
+        <div class="scanner">
+
+          <div id="qrcode" class="signature-block logos img">
+
+          </div>
+        </div>
+        <div class="logos img">
+          <img src="iso9001.png" alt="ISO 9001:2015 Certified">
+          <!-- <img src="placeholder-iaf-logo.png" alt="IAF Member">
+                <img src="placeholder-egac-logo.png" alt="EGAC Accredited"> -->
+        </div>
+        <div class="signatures">
+
+          <div class="signature-block">
+            <p class="signature-line"></p>
+            <p>Head Institute & Director</p>
+          </div>
+        </div>
+      </footer>
+      <hr>
+      <p class="footer-text"><strong>Address:</strong> Near HDFC Bank, Bareta, Distt. Mansa - 151501(Punjab)<br>
+        <strong>Email:</strong> futurepathadvisoroffice@gmail.com &nbsp; &nbsp;
+        <strong>Contact:</strong> 97791-29690, 98789-75877
+      </p>
+    </div>
+  </div>
+</body>
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  document.getElementById("certificate_no").textContent = params.get("CertificateNO") || "";
+  document.getElementById("rollno").textContent = params.get("empId") || "";
+  document.getElementById("studentName").textContent = params.get("fullName") || "";
+  document.getElementById("fathername").textContent = params.get("fatherName") || "";
+  document.getElementById("examDate").textContent = params.get("examDate") || "";
+  document.getElementById("course").textContent = params.get("course") || "";
+  //document.getElementById("duration").textContent = "3 MONTH"; // or calculate dynamically if needed
+  document.getElementById("joingdate").textContent = params.get("joiningDate") || "";
+  document.getElementById("completedate").textContent = params.get("completedate") || "";
+  document.getElementById("grade").textContent = params.get("grade") || "";
+  document.getElementById("issuedate").textContent = params.get("issuedate") || "";
+  const joiningDateStr = params.get("joiningDate");
+  const completedDateStr = params.get("completedate");
+
+  if (joiningDateStr && completedDateStr) {
+    const start = new Date(joiningDateStr);
+    const end = new Date(completedDateStr);
+
+    // Calculate month difference
+    let months = (end.getFullYear() - start.getFullYear()) * 12;
+    months -= start.getMonth();
+    months += end.getMonth();
+
+    // If end date’s day < start date’s day, adjust
+    if (end.getDate() < start.getDate()) {
+      months--;
+    }
+
+    document.getElementById("duration").textContent = months + " MONTH";
+  } else {
+    document.getElementById("duration").textContent = "";
+  }
+  scanner()
+  download()
+  //window.close();
+  function download() {
+    const element = document.getElementById("certificate-body");
+    const opt = {
+      margin: 0,
+      filename: "certificate.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "landscape" }
+    };
+    html2pdf().set(opt).from(element).save();
+  };
+  function scanner() {
+    const params = new URLSearchParams(window.location.search);
+const certificateNo = params.get("CertificateNO") || "";
+
+// Now certificateNo will be "man/0001", not "man%2F0001"
+document.getElementById("certificate_no").textContent = certificateNo;
+
+    // Generate QR Code that links to verification page
+    const verifyURL = `https://yourdomain.com/verify?certificate_no=${certificateNo}`;
+
+    new QRCode(document.getElementById("qrcode"), {
+      text: verifyURL,
+      width: 100,
+      height: 100
+    });
+  };
+</script>
+
+</html>
