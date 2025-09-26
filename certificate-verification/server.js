@@ -181,7 +181,7 @@ app.get('/login', (req, res) => {
     return res.redirect('/good');
   }
 
-  // Serve the login HTML file
+  // Serve the login HTML file?
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
@@ -262,20 +262,10 @@ app.get('/logout', (req, res) => {
 });
 
 // Root route
-app.get('/', (req, res) => {
-  const user = req.session.userId ? {
-    username: req.session.userId,
-    email: req.session.userEmail,
-    role: req.session.userRole
-  } : null;
-
-  res.json({ 
-    message: "Certificate Portal API", 
-    timestamp: new Date().toISOString(),
-    status: "OK",
-    authenticated: !!req.session.userId,
-    user: user
-  });
+app.get("/", (req, res) => {
+  
+    res.redirect("/verification"); // logged in → verification
+  // not logged in → login page
 });
 
 // Get current user info
@@ -299,7 +289,7 @@ app.get('/good', requireAuth(), (req, res) => {
   }
 });
 
-app.get('/verification', requireAuth(), (req, res) => {
+app.get('/verification', (req, res) => {
   console.log('Verify page requested by:', req.session.userId);
   try {
     res.sendFile(path.join(__dirname, 'public', 'verify.html'));
