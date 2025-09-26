@@ -125,7 +125,7 @@
     </div>
   </div>
 
-  <script>
+  <!-- <script>
     // Check for error messages in URL params
     const urlParams = new URLSearchParams(window.location.search);
     const error = urlParams.get('error');
@@ -147,6 +147,59 @@
       
       errorDiv.innerHTML = errorMsg;
     }
-  </script>
+  </script> -->
+  <script>
+const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; // Replace with your GAS URL
+const API_KEY = "YOUR_API_KEY"; // optional if you used it before
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  const payload = new URLSearchParams();
+  payload.append('key', API_KEY);
+  payload.append('action', 'authenticate');
+  payload.append('username', username);
+  payload.append('password', password);
+
+  try {
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: payload
+    });
+
+    const text = await response.text();
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch (err) {
+      console.error('Failed to parse response:', err);
+      document.getElementById('error-message').innerHTML =
+        `<div class="error">Server error. Please try again.</div>`;
+      return;
+    }
+
+    if (result.success) {
+      // Optional: save user info locally (like sessionStorage)
+      sessionStorage.setItem('user', JSON.stringify(result.user));
+
+      // Redirect to success page
+      window.location.href = '/good.html';
+    } else {
+      document.getElementById('error-message').innerHTML =
+        `<div class="error">Invalid username or password</div>`;
+    }
+
+  } catch (err) {
+    console.error('Login request failed:', err);
+    document.getElementById('error-message').innerHTML =
+      `<div class="error">Server error. Please try again later.</div>`;
+  }
+});
+</script>
+
 </body>
 </html>
