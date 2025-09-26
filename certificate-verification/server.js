@@ -264,7 +264,7 @@ app.get('/logout', (req, res) => {
 // Root route
 app.get("/", (req, res) => {
   
-    res.redirect("/verification"); // logged in → verification
+   res.sendFile(path.join(__dirname, 'public', 'verify.html')); // logged in → verification
   // not logged in → login page
 });
 
