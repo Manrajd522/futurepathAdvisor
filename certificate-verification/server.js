@@ -447,6 +447,17 @@ app.get('/authentication', (req, res) => {
   }
 });
 
+//site_map
+app.get('/sitepaths', (req, res) => {
+  try {
+    res.sendFile(path.join(__dirname, 'public', 'sitemap.html'));
+  } catch (err) {
+    console.error('Error serving authentication certificate page:', err);
+    res.status(404).json({ error: 'authentication certificate page not found' });
+  }
+});
+
+
 // Admin route
 app.get('/admin', requireAuth('admin'), (req, res) => {
   console.log('Admin panel requested by:', req.session.userId);
