@@ -17,6 +17,8 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+              margin: 0;
+    padding-top: 60px;
         }
 
         .container {
@@ -380,7 +382,7 @@
             submitBtn.innerHTML = '<span class="loading"></span>Saving...';
             
             try {
-                const res = await fetch(`${backendURL}/add`, {
+                const res = await fetch(`${backendURL}/add_TO_database`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
@@ -390,7 +392,7 @@
                 
                 if (res.ok) {
                     const params = new URLSearchParams(formData).toString();
-                     window.open("index.html?" + params, "_blank");
+                     window.open("certificatedegree.html?" + params, "_blank");
                     showStatus("✅ Data submitted successfully!", "success");
                     form.reset();
                 } else {
@@ -415,7 +417,7 @@
             loadBtn.innerHTML = '<span class="loading"></span>Loading...';
 
             try {
-                const res = await fetch(`${backendURL}/data`);
+                const res = await fetch(`${backendURL}/load_data_from_database`);
                 const data = await res.json();
 
                 if (!Array.isArray(data) || data.length === 0) {

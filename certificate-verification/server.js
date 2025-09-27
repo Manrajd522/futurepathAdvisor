@@ -36,6 +36,102 @@ app.use(session({
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxAV25ask9JlFGBkY2YiqmQGLZHVFyPXwll-phC-1DFR5Waq9oy42WhoBY0AQjJqROG/exec";
 const API_KEY = process.env.API_KEY || "MY_SECRET_KEY";
 
+//navbar
+const navbarHTML = `
+<nav style="position:fixed; top:0; left:0; right:0; height:60px; background:#1a202c; color:white; padding:5px 20px; font-family:'Segoe UI',sans-serif; display:flex; justify-content:space-between; align-items:center; z-index:1000; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+  <div style="display:flex; align-items:center; font-weight:bold; font-size:18px;">
+    <img src="erasebg-transformed.png" alt="Institute Logo" style="width:45px; height:auto; margin-right:12px;">
+    FUTURE PATH ADVISOR
+  </div>
+
+  <!-- Hamburger button (mobile only) -->
+  <div class="menu-toggle" style="display:none; cursor:pointer; font-size:26px;">☰</div>
+
+  <div id="nav-links" class="nav-links" style="display:flex; gap:20px; align-items:center; font-size:15px;">
+    <!-- Links will be injected dynamically -->
+  </div>
+</nav>
+
+<style>
+  body {
+    margin: 0;
+    padding-top: 65px; /* space for navbar */
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none; /* hide menu by default */
+      flex-direction: column;
+      background: #2d3748;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 200px;
+      padding: 10px;
+      box-shadow: -2px 2px 6px rgba(0,0,0,0.3);
+    }
+    .nav-links.show {
+      display: flex;
+    }
+    .menu-toggle {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  // Toggle menu on mobile
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (toggle && navLinks) {
+      toggle.addEventListener("click", () => {
+        navLinks.classList.toggle("show");
+      });
+    }
+  });
+
+  fetch('/me', { credentials: 'include' })
+    .then(res => {
+      if (!res.ok) throw new Error("Not logged in");
+      return res.json();
+    })
+    .then(user => {
+      const nav = document.getElementById('nav-links');
+      if (!nav) return;
+      nav.innerHTML = \`
+        <a href="/good">🏠 Home</a>
+        <a href="/verification">✅ Verify</a>
+        \${user.role === 'admin' ? '<a href="/admin">⚙️ Admin</a>' : ''}
+        <a href="#" onclick="logout()" style="color:#f56565;">🚪 Logout</a>
+      \`;
+    })
+    .catch(() => {
+      const nav = document.getElementById('nav-links');
+      if (nav) {
+        nav.innerHTML = '<a href="/login">🔑 Login</a>';
+      }
+    });
+
+  function logout() {
+    fetch('/logout', { method: 'POST', credentials: 'include' })
+      .then(() => window.location.href = '/login');
+  }
+</script>
+`;
+
+
+
+
 // LOGOUT BUTTON HTML - This gets injected into authenticated pages
 const logoutButtonHTML = `
 <div id="universal-logout" style="position: fixed; top: 15px; right: 15px; z-index: 9999;">
@@ -105,50 +201,82 @@ setInterval(() => {
 `;
 
 // MIDDLEWARE: Inject logout button into authenticated HTML pages
-const injectLogoutButton = (req, res, next) => {
-  // Only inject for authenticated users
-  if (!req.session || !req.session.userId) {
-    return next();
-  }
+// const injectLogoutButton = (req, res, next) => {
+//   // Only inject for authenticated users
+//   if (!req.session || !req.session.userId) {
+//     return next();
+//   }
 
-  // Store original res.sendFile
-  const originalSendFile = res.sendFile.bind(res);
+//   // Store original res.sendFile
+//   const originalSendFile = res.sendFile.bind(res);
   
-  // Override res.sendFile to inject logout button
+//   // Override res.sendFile to inject logout button
+//   res.sendFile = function(filePath, options, callback) {
+//     // Check if it's an HTML file
+//     if (filePath.endsWith('.html')) {
+//       try {
+//         // Read the HTML file
+//         const htmlContent = fs.readFileSync(filePath, 'utf8');
+        
+//         // Inject logout button before closing body tag
+//         const modifiedHTML = htmlContent.replace(
+//           /<\/body>/i, 
+//           logoutButtonHTML + '</body>'
+//         );
+        
+//         // Send modified HTML
+//         res.setHeader('Content-Type', 'text/html');
+//         res.send(modifiedHTML);
+        
+//         if (callback) callback();
+//       } catch (err) {
+//         console.error('Error injecting logout button:', err);
+//         // Fallback to original sendFile
+//         originalSendFile(filePath, options, callback);
+//       }
+//     } else {
+//       // Not HTML, use original sendFile
+//       originalSendFile(filePath, options, callback);
+//     }
+//   };
+  
+//   next();
+// };
+
+// // Apply logout button injection middleware
+// app.use(injectLogoutButton);
+
+const injectNavbar = (req, res, next) => {
+  const originalSendFile = res.sendFile.bind(res);
+
   res.sendFile = function(filePath, options, callback) {
-    // Check if it's an HTML file
     if (filePath.endsWith('.html')) {
       try {
-        // Read the HTML file
-        const htmlContent = fs.readFileSync(filePath, 'utf8');
-        
-        // Inject logout button before closing body tag
-        const modifiedHTML = htmlContent.replace(
-          /<\/body>/i, 
-          logoutButtonHTML + '</body>'
+        let htmlContent = fs.readFileSync(filePath, 'utf8');
+
+        // Inject navbar right after opening <body>
+        htmlContent = htmlContent.replace(
+          /<body[^>]*>/i,
+          match => match + "\n" + navbarHTML
         );
-        
-        // Send modified HTML
+
         res.setHeader('Content-Type', 'text/html');
-        res.send(modifiedHTML);
-        
+        res.send(htmlContent);
         if (callback) callback();
       } catch (err) {
-        console.error('Error injecting logout button:', err);
-        // Fallback to original sendFile
+        console.error('Navbar injection failed:', err);
         originalSendFile(filePath, options, callback);
       }
     } else {
-      // Not HTML, use original sendFile
       originalSendFile(filePath, options, callback);
     }
   };
-  
+
   next();
 };
 
-// Apply logout button injection middleware
-app.use(injectLogoutButton);
+
+app.use(injectNavbar);
 
 // Serve static files AFTER logout button middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -290,7 +418,7 @@ app.get('/good', requireAuth(), (req, res) => {
 });
 
 app.get('/verification', (req, res) => {
-  console.log('Verify page requested by:', req.session.userId);
+ 
   try {
     res.sendFile(path.join(__dirname, 'public', 'verify.html'));
   } catch (err) {
@@ -306,6 +434,16 @@ app.get('/degree', requireAuth(), (req, res) => {
   } catch (err) {
     console.error('Error serving degree certificate page:', err);
     res.status(404).json({ error: 'Degree certificate page not found' });
+  }
+});
+
+
+app.get('/authentication', (req, res) => {
+  try {
+    res.sendFile(path.join(__dirname, 'public', 'authentication.html'));
+  } catch (err) {
+    console.error('Error serving authentication certificate page:', err);
+    res.status(404).json({ error: 'authentication certificate page not found' });
   }
 });
 
@@ -527,7 +665,7 @@ app.delete('/admin/users/:username', requireAuth('admin'), async (req, res) => {
 });
 
 // API Routes (your existing functionality)
-app.post('/add', async (req, res) => {
+app.post('/add_TO_database', async (req, res) => {
   console.log('POST /add route accessed');
   
   try {
@@ -567,7 +705,7 @@ app.post('/add', async (req, res) => {
   }
 });
 
-app.get('/data', async (req, res) => {
+app.get('/load_data_from_database', async (req, res) => {
   try {
     const url = `${SCRIPT_URL}?key=${API_KEY}`;
     const response = await fetch(url);

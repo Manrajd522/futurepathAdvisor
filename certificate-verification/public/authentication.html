@@ -15,9 +15,9 @@
     rel="stylesheet">
 </head>
 
-<body>
-  <div id="certificate-body" class="main-body">
-    <div class="certificate-container">
+<body class="certificate-authentication-body">
+  <div id="certificate-body" class="main-body certificate-authentication-body">
+    <div class="certificate-container certificate-authentication-body">
       <header class="certificate-header">
         <div class="logos img ">
           <img src="erasebg-transformed.png" alt="Institute Logo">
@@ -85,13 +85,13 @@
   document.getElementById("rollno").textContent = params.get("empId") || "";
   document.getElementById("studentName").textContent = params.get("fullName") || "";
   document.getElementById("fathername").textContent = params.get("fatherName") || "";
-  document.getElementById("examDate").textContent = params.get("examDate") || "";
+  document.getElementById("examDate").textContent = formatDate(params.get("examDate")) || "";
   document.getElementById("course").textContent = params.get("course") || "";
   //document.getElementById("duration").textContent = "3 MONTH"; // or calculate dynamically if needed
-  document.getElementById("joingdate").textContent = params.get("joiningDate") || "";
-  document.getElementById("completedate").textContent = params.get("completedate") || "";
+  document.getElementById("joingdate").textContent = formatDate(params.get("joiningDate")) || "";
+  document.getElementById("completedate").textContent = formatDate(params.get("completedate")) || "";
   document.getElementById("grade").textContent = params.get("grade") || "";
-  document.getElementById("issuedate").textContent = params.get("issuedate") || "";
+  document.getElementById("issuedate").textContent = formatDate(params.get("issuedate")) || "";
   const joiningDateStr = params.get("joiningDate");
   const completedDateStr = params.get("completedate");
 
@@ -113,21 +113,21 @@
   } else {
     document.getElementById("duration").textContent = "";
   }
+
+  function formatDate(dateStr) {
+  if (!dateStr) return 'N/A';
+  const date = new Date(dateStr);
+  if (isNaN(date)) return dateStr; // if parsing fails, return raw value
+
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // months are 0-based
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
+
   scanner()
-  download()
-  //window.close();
-  function download() {
-    
-    const element = document.getElementById("certificate-body");
-    const opt = {
-      margin: 0,
-      filename: params.get("CertificateNO")+"certificate.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "landscape" }
-    };
-    html2pdf().set(opt).from(element).save();
-  };
+  
   function scanner() {
     const params = new URLSearchParams(window.location.search);
 const certificateNo = params.get("CertificateNO") || "";
