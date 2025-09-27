@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Future Path Advisor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Main container */
+        .container {
+            text-align: center;
+            color: white;
+            z-index: 10;
+            position: relative;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        /* 404 Number Animation */
+        .error-number {
+            font-size: 8rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            animation: bounce 2s infinite;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-number .digit {
+            display: inline-block;
+            animation: wobble 3s infinite;
+        }
+
+        .error-number .digit:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .error-number .digit:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes wobble {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-5deg) scale(1.1); }
+            50% { transform: rotate(0deg) scale(1); }
+            75% { transform: rotate(5deg) scale(1.1); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        /* Robot/Astronaut Animation */
+        .robot {
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            position: relative;
+            animation: float-robot 4s ease-in-out infinite;
+        }
+
+        @keyframes float-robot {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .robot-body {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #4a90e2, #357abd);
+            border-radius: 20px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .robot-head {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #5ba0f2, #4a90e2);
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            top: -10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .robot-eyes {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 12px;
+        }
+
+        .eye {
+            width: 8px;
+            height: 8px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            animation: blink 3s infinite;
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        .robot-antenna {
+            width: 2px;
+            height: 15px;
+            background: #666;
+            margin: 0 auto;
+            position: relative;
+            top: -60px;
+        }
+
+        .robot-antenna::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            position: absolute;
+            top: -3px;
+            left: -2px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+        }
+
+        /* Text animations */
+        .error-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            animation: slideInFromLeft 1s ease-out;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: slideInFromRight 1s ease-out 0.3s both;
+            line-height: 1.6;
+        }
+
+        @keyframes slideInFromLeft {
+            0% {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromRight {
+            0% {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 0.9;
+            }
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Glitch effect for 404 */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 2s infinite;
+            color: #ff00ff;
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 2s infinite;
+            color: #00ffff;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 90%, 100% {
+                transform: translate(0);
+            }
+            10% {
+                transform: translate(-2px, -2px);
+            }
+            20% {
+                transform: translate(2px, 2px);
+            }
+            30% {
+                transform: translate(-2px, 2px);
+            }
+            40% {
+                transform: translate(2px, -2px);
+            }
+        }
+
+        @keyframes glitch-2 {
+            0%, 90%, 100% {
+                transform: translate(0);
+            }
+            10% {
+                transform: translate(2px, 2px);
+            }
+            20% {
+                transform: translate(-2px, -2px);
+            }
+            30% {
+                transform: translate(2px, -2px);
+            }
+            40% {
+                transform: translate(-2px, 2px);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .error-number {
+                font-size: 5rem;
+            }
+            
+            .error-title {
+                font-size: 2rem;
+            }
+            
+            .error-message {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .robot {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        /* Logo styling */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 20;
+        }
+
+        .logo img {
+            width: 40px;
+            height: auto;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo -->
+    <div class="logo">
+        <img src="erasebg-transformed.png" alt="Future Path Advisor Logo" onerror="this.style.display='none'">
+        FUTURE PATH ADVISOR
+    </div>
+
+    <!-- Animated particles -->
+    <div class="particles"></div>
+
+    <!-- Main content -->
+    <div class="container">
+        <div class="error-number glitch" data-text="404">
+            <span class="digit">4</span>
+            <span class="digit">0</span>
+            <span class="digit">4</span>
+        </div>
+
+        <div class="robot">
+            <div class="robot-antenna"></div>
+            <div class="robot-head">
+                <div class="robot-eyes">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                </div>
+            </div>
+            <div class="robot-body"></div>
+        </div>
+
+        <h1 class="error-title">Oops! Page Not Found</h1>
+        <p class="error-message">
+            Looks like this page took a detour into the digital void! 🚀<br>
+            Don't worry, even our robot friend is confused. Let's get you back on track.
+        </p>
+
+        <div class="btn-container">
+            <a href="/" class="btn btn-primary">🏠 Go Home</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">⬅️ Go Back</a>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random starting position
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                
+                // Random size
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Enhanced glitch effect
+        function randomGlitch() {
+            const glitchElement = document.querySelector('.glitch');
+            const randomTime = Math.random() * 5000 + 3000; // 3-8 seconds
+            
+            setTimeout(() => {
+                glitchElement.style.animation = 'none';
+                setTimeout(() => {
+                    glitchElement.style.animation = '';
+                    randomGlitch();
+                }, 100);
+            }, randomTime);
+        }
+
+        // Robot interaction
+        function addRobotInteraction() {
+            const robot = document.querySelector('.robot');
+            let isClicked = false;
+            
+            robot.addEventListener('click', function() {
+                if (!isClicked) {
+                    this.style.animation = 'float-robot 0.5s ease-in-out';
+                    
+                    // Change eye color temporarily
+                    const eyes = document.querySelectorAll('.eye');
+                    eyes.forEach(eye => {
+                        eye.style.background = '#4CAF50';
+                    });
+                    
+                    // Reset after animation
+                    setTimeout(() => {
+                        this.style.animation = 'float-robot 4s ease-in-out infinite';
+                        eyes.forEach(eye => {
+                            eye.style.background = '#ff6b6b';
+                        });
+                    }, 500);
+                    
+                    isClicked = true;
+                    setTimeout(() => isClicked = false, 1000);
+                }
+            });
+            
+            robot.style.cursor = 'pointer';
+        }
+
+        // Konami code easter egg
+        let konamiCode = [];
+        const konamiSequence = [
+            'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+            'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+            'KeyB', 'KeyA'
+        ];
+
+        document.addEventListener('keydown', function(e) {
+            konamiCode.push(e.code);
+            if (konamiCode.length > konamiSequence.length) {
+                konamiCode.shift();
+            }
+            
+            if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+                // Easter egg: Make everything dance!
+                document.body.style.animation = 'wobble 2s infinite';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 10000);
+                konamiCode = [];
+            }
+        });
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            randomGlitch();
+            addRobotInteraction();
+            
+            // Add some fun console messages
+            console.log('🤖 Beep beep! You found the 404 page!');
+            console.log('💡 Try clicking on the robot or entering the Konami code!');
+        });
+
+        // Add keyboard navigation for accessibility
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'h' || e.key === 'H') {
+                window.location.href = '/';
+            } else if (e.key === 'b' || e.key === 'B') {
+                history.back();
+            }
+        });
+    </script>
+</body>
+</html>
