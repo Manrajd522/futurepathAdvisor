@@ -245,6 +245,53 @@
                 transform: rotate(360deg);
             }
         }
+        /* On mobile (<= 768px), stack inputs and reduce font size */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;  /* stack instead of row */
+        gap: 15px;
+    }
+
+    .form-row .form-group {
+        flex: 1 1 100%;
+    }
+
+    /* Reduce font sizes */
+    body {
+        font-size: 14px; /* base font smaller */
+    }
+
+    .header h1 {
+        font-size: 1.8em;
+    }
+
+    .header p {
+        font-size: 0.9em;
+    }
+
+    .form-group label {
+        font-size: 0.95em;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        font-size: 0.95em;
+        padding: 12px;  /* slightly smaller padding */
+    }
+
+    .btn {
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+
+    .data-table th,
+    .data-table td {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+}
+
     </style>
 </head>
 

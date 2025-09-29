@@ -190,7 +190,7 @@ body {
 
   .main-body {
     width: 130mm;   /* keep original desktop width */
-    height: auto;
+    height: 100mm;
     min-height: calc(100vh - 200px);
     padding: 10px 5px;
     display: block; /* avoid shrinking flex */
