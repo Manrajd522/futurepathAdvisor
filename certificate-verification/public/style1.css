@@ -189,16 +189,16 @@ body {
   }
 
   .main-body {
-    width: 287mm;   /* keep original desktop width */
+    width: 130mm;   /* keep original desktop width */
     height: auto;
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 200px);
     padding: 10px 5px;
     display: block; /* avoid shrinking flex */
     overflow-x: auto; /* horizontal scroll */
   }
 
   .certificate-container {
-    width: 249mm;  /* fixed width */
+    width: 130mm;  /* fixed width */
     transform: none !important; /* stop scaling */
     margin: 0 auto;
   }
