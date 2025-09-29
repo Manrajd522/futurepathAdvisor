@@ -536,6 +536,23 @@ app.get('/verification', (req, res) => {
   }
 });
 
+app.get("/verify", async (req, res) => {
+  const { certificateNo } = req.query;
+
+  if (!certificateNo) {
+    return res.status(400).json({ error: "Certificate number is required" });
+  }
+
+  try {
+    const response = await fetch(`${SCRIPT_URL}?action=verify&certificateNo=${encodeURIComponent(certificateNo)}&key=${SECRET_KEY}`);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Error verifying certificate:", error);
+    res.status(500).json({ error: "Server error while verifying certificate" });
+  }
+});
+
 app.get('/degree', requireAuth(), (req, res) => {
   console.log('Degree certificate page requested by:', req.session.userId);
   try {
