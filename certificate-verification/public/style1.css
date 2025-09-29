@@ -181,105 +181,25 @@ body {
     text-align: center;
     margin: 0 0px 0px;
 }
-
-/* ==============================================
-   MOBILE RESPONSIVE RULES - ADD THESE AT THE END
-   ============================================== */
-
-/* Tablets and small desktops */
-@media screen and (max-width: 1200px) {
-    .main-body {
-        width: 100vw;
-        height: auto;
-        min-height: 100vh;
-        padding: 20px 10px;
-        transform: none;
-    }
-    
-    .certificate-container {
-        width: 95%;
-        max-width: 900px;
-        transform: scale(0.85);
-        transform-origin: center top;
-    }
-}
-
-/* Mobile devices */
+/* Make certificate scrollable horizontally on small screens */
 @media screen and (max-width: 768px) {
-    body {
-        padding-top: 70px; /* Account for navbar */
-        overflow-x: hidden;
-    }
-    
-    .main-body {
-        width: 100vw;
-        height: auto;
-        min-height: calc(100vh - 70px);
-        padding: 10px 5px;
-        background-color: #f0f0f0;
-    }
-    
-    .certificate-container {
-        width: 98%;
-        max-width: none;
-        margin: 0 auto;
-        /* Scale down to fit mobile screens while maintaining proportions */
-        transform: scale(0.45);
-        transform-origin: center top;
-        margin-bottom: -400px; /* Adjust negative margin to prevent excess whitespace */
-    }
-    
-    /* Ensure text remains readable after scaling */
-    .institute-name {
-        font-size: 2.4em; /* Slightly larger to compensate for scaling */
-    }
-    
-    .main-title {
-        font-size: 2em;
-    }
-    
-    .certification-text {
-        font-size: 1.2em;
-        line-height: 1.7;
-    }
-}
+  body {
+    padding-top: 70px;
+    overflow-x: auto; /* allow horizontal scroll */
+  }
 
-/* Very small mobile devices */
-@media screen and (max-width: 480px) {
-    body {
-        padding-top: 65px;
-    }
-    
-    .certificate-container {
-        transform: scale(0.35);
-        margin-bottom: -500px;
-    }
-    
-    .institute-name {
-        font-size: 2.6em;
-    }
-    
-    .main-title {
-        font-size: 2.2em;
-    }
-    
-    .certification-text {
-        font-size: 1.3em;
-    }
-}
+  .main-body {
+    width: 287mm;   /* keep original desktop width */
+    height: auto;
+    min-height: calc(100vh - 70px);
+    padding: 10px 5px;
+    display: block; /* avoid shrinking flex */
+    overflow-x: auto; /* horizontal scroll */
+  }
 
-/* Large mobile devices in landscape */
-@media screen and (max-width: 768px) and (orientation: landscape) {
-    .certificate-container {
-        transform: scale(0.55);
-        margin-bottom: -300px;
-    }
-}
-
-/* Prevent horizontal scrolling */
-@media screen and (max-width: 768px) {
-    html, body {
-        overflow-x: hidden;
-        width: 100%;
-    }
+  .certificate-container {
+    width: 249mm;  /* fixed width */
+    transform: none !important; /* stop scaling */
+    margin: 0 auto;
+  }
 }

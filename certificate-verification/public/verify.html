@@ -443,7 +443,7 @@
     //const scriptURL = "https://script.google.com/macros/s/AKfycbxAV25ask9JlFGBkY2YiqmQGLZHVFyPXwll-phC-1DFR5Waq9oy42WhoBY0AQjJqROG/exec";
 
 //
-const scriptURL = "https://futurepathadvisor.com/verify"; // or your deployed backend URL
+const scriptURL = "http://localhost:3000/verify"; // or your deployed backend URL
 
 async function verifyCertificate() {
   const certNo = document.getElementById("certificateNo").value.trim();
@@ -474,140 +474,143 @@ async function verifyCertificate() {
 
 
 //
-    // async function verifyCertificate() {
-    //   const certNo = document.getElementById("certificateNo").value.trim();
-    //   const resultDiv = document.getElementById("result");
-    //   const verifyBtn = document.getElementById("verifyBtn");
-    //   const btnText = document.getElementById("btnText");
-    //   const loadingSpinner = document.getElementById("loadingSpinner");
+    async function verifyCertificate() {
+      const certNo = document.getElementById("certificateNo").value.trim();
+      const resultDiv = document.getElementById("result");
+      const verifyBtn = document.getElementById("verifyBtn");
+      const btnText = document.getElementById("btnText");
+      const loadingSpinner = document.getElementById("loadingSpinner");
 
-    //   if (!certNo) {
-    //     showNotification("Please enter a certificate number.", "error");
-    //     return;
-    //   }
+      if (!certNo) {
+        showNotification("Please enter a certificate number.", "error");
+        return;
+      }
 
-    //   // Show loading state
-    //   verifyBtn.disabled = true;
-    //   btnText.style.display = "none";
-    //   loadingSpinner.style.display = "block";
+      // Show loading state
+      verifyBtn.disabled = true;
+      btnText.style.display = "none";
+      loadingSpinner.style.display = "block";
 
       
 
-    //   try {
+      try {
 
 
-    //     const res = await fetch(`${scriptURL}?action=verify&certificateNo=${encodeURIComponent(certNo)}&key=MY_SECRET_KEY`);
-    //     const data = await res.json();
+        // const res = await fetch(`${scriptURL}?action=verify&certificateNo=${encodeURIComponent(certNo)}&key=MY_SECRET_KEY`);
+        // const data = await res.json();
+            const res = await fetch(`${scriptURL}?certificateNo=${encodeURIComponent(certNo)}`);
+    const data = await res.json();
+
 
         
-    //     certificateData = data;
+        certificateData = data;
 
-    //     if (data.valid) {
-    //       resultDiv.className = "result valid";
-    //       viewFullCertificate()
-    //       // resultDiv.innerHTML = `
-    //       //   <div class="result-header">
-    //       //     <i class="fas fa-check-circle result-icon"></i>
-    //       //     <div class="result-title">Certificate Verified Successfully!</div>
-    //       //   </div>
+        if (data.valid) {
+          resultDiv.className = "result valid";
+          viewFullCertificate()
+          // resultDiv.innerHTML = `
+          //   <div class="result-header">
+          //     <i class="fas fa-check-circle result-icon"></i>
+          //     <div class="result-title">Certificate Verified Successfully!</div>
+          //   </div>
 
-    //       //   <div class="certificate-details">
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Certificate Number</div>
-    //       //       <div class="detail-value">${data.CertificateNO || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Full Name</div>
-    //       //       <div class="detail-value">${data.fullName || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Father's Name</div>
-    //       //       <div class="detail-value">${data.fatherName || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Email Address</div>
-    //       //       <div class="detail-value">${data.email || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Phone Number</div>
-    //       //       <div class="detail-value">${data.phone || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Gender</div>
-    //       //       <div class="detail-value">${data.gender || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Date of Birth</div>
-    //       //       <div class="detail-value">${formatDate(data.dob) || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Roll NO</div>
-    //       //       <div class="detail-value">${data.empId || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Course</div>
-    //       //       <div class="detail-value">${data.course || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Grade</div>
-    //       //       <div class="detail-value">${data.grade || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Completion Date</div>
-    //       //       <div class="detail-value">${formatDate(data.completedate) || 'N/A'}</div>
-    //       //     </div>
-    //       //     <div class="detail-item">
-    //       //       <div class="detail-label">Issue Date</div>
-    //       //       <div class="detail-value">${formatDate(data.issuedate) || 'N/A'}</div>
-    //       //     </div>
-    //       //   </div>
+          //   <div class="certificate-details">
+          //     <div class="detail-item">
+          //       <div class="detail-label">Certificate Number</div>
+          //       <div class="detail-value">${data.CertificateNO || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Full Name</div>
+          //       <div class="detail-value">${data.fullName || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Father's Name</div>
+          //       <div class="detail-value">${data.fatherName || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Email Address</div>
+          //       <div class="detail-value">${data.email || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Phone Number</div>
+          //       <div class="detail-value">${data.phone || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Gender</div>
+          //       <div class="detail-value">${data.gender || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Date of Birth</div>
+          //       <div class="detail-value">${formatDate(data.dob) || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Roll NO</div>
+          //       <div class="detail-value">${data.empId || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Course</div>
+          //       <div class="detail-value">${data.course || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Grade</div>
+          //       <div class="detail-value">${data.grade || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Completion Date</div>
+          //       <div class="detail-value">${formatDate(data.completedate) || 'N/A'}</div>
+          //     </div>
+          //     <div class="detail-item">
+          //       <div class="detail-label">Issue Date</div>
+          //       <div class="detail-value">${formatDate(data.issuedate) || 'N/A'}</div>
+          //     </div>
+          //   </div>
 
-    //       //   <button class="redirect-btn" onclick="viewFullCertificate()">
-    //       //     <i class="fas fa-certificate"></i>
-    //       //     View Full Certificate
-    //       //   </button>
-    //       // `;
+          //   <button class="redirect-btn" onclick="viewFullCertificate()">
+          //     <i class="fas fa-certificate"></i>
+          //     View Full Certificate
+          //   </button>
+          // `;
 
-    //       // // Add success animation
-    //       setTimeout(() => {
-    //         resultDiv.style.transform = "scale(1.02)";
-    //         setTimeout(() => {
-    //           resultDiv.style.transform = "scale(1)";
-    //         }, 200);
-    //       }, 100);
+          // // Add success animation
+          setTimeout(() => {
+            resultDiv.style.transform = "scale(1.02)";
+            setTimeout(() => {
+              resultDiv.style.transform = "scale(1)";
+            }, 200);
+          }, 100);
 
-    //     } else {
-    //       resultDiv.className = "result invalid";
-    //       resultDiv.innerHTML = `
-    //         <div class="result-header">
-    //           <i class="fas fa-times-circle result-icon"></i>
-    //           <div class="result-title">Certificate Not Found</div>
-    //         </div>
-    //         <p><strong>Certificate Number:</strong> ${certNo}</p>
-    //         <p>${data.message || 'This certificate number was not found in our records. Please check the number and try again.'}</p>
-    //         <p><small><i class="fas fa-info-circle"></i> If you believe this is an error, please contact our support team.</small></p>
-    //       `;
-    //     }
+        } else {
+          resultDiv.className = "result invalid";
+          resultDiv.innerHTML = `
+            <div class="result-header">
+              <i class="fas fa-times-circle result-icon"></i>
+              <div class="result-title">Certificate Not Found</div>
+            </div>
+            <p><strong>Certificate Number:</strong> ${certNo}</p>
+            <p>${data.message || 'This certificate number was not found in our records. Please check the number and try again.'}</p>
+            <p><small><i class="fas fa-info-circle"></i> If you believe this is an error, please contact our support team.</small></p>
+          `;
+        }
 
-    //   } catch (err) {
-    //     resultDiv.className = "result invalid";
-    //     resultDiv.innerHTML = `
-    //       <div class="result-header">
-    //         <i class="fas fa-exclamation-triangle result-icon"></i>
-    //         <div class="result-title">Verification Error</div>
-    //       </div>
-    //       <p>We encountered an error while verifying your certificate. Please try again later.</p>
-    //       <p><small>If the problem persists, please contact technical support.</small></p>
-    //     `;
-    //   } finally {
-    //     // Reset button state
-    //     verifyBtn.disabled = false;
-    //     btnText.style.display = "inline";
-    //     loadingSpinner.style.display = "none";
-    //     resultDiv.style.display = "none";
+      } catch (err) {
+        resultDiv.className = "result invalid";
+        resultDiv.innerHTML = `
+          <div class="result-header">
+            <i class="fas fa-exclamation-triangle result-icon"></i>
+            <div class="result-title">Verification Error</div>
+          </div>
+          <p>We encountered an error while verifying your certificate. Please try again later.</p>
+          <p><small>If the problem persists, please contact technical support.</small></p>
+        `;
+      } finally {
+        // Reset button state
+        verifyBtn.disabled = false;
+        btnText.style.display = "inline";
+        loadingSpinner.style.display = "none";
+        resultDiv.style.display = "none";
 
-    //   }
-    // }
+      }
+    }
 
 
     function formatDate(dateStr) {
