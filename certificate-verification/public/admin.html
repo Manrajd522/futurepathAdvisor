@@ -570,7 +570,6 @@
                     username: user.username,
                     role: user.role
                 };
-                console.log("Logged in as:", currentUser);
 
                 // Example: update UI
                 document.getElementById("username").textContent = currentUser.username;
@@ -615,7 +614,7 @@
                 const usersResponse = await fetch('/admin/users', { credentials: 'include' });
                 const users = await usersResponse.json();
 
-                const certsResponse = await fetch('/data', { credentials: 'include' });
+                const certsResponse = await fetch('/load_data_from_database', { credentials: 'include' });
                 const certificates = await certsResponse.json();
 
                 document.getElementById('total-users').textContent = users.length || 0;

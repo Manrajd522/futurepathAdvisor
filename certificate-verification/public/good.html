@@ -251,8 +251,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Sheets Manager</h1>
-            <p>Store and retrieve data from Google Sheets seamlessly</p>
+            <h1>📊 Certificate Manager</h1>
+            <p>Store and retrieve data from DataBase seamlessly</p>
         </div>
 
         <div class="main-content">
@@ -341,7 +341,7 @@
                         </div>
                         <div class="form-group">
                             <label for="issuedate">Issued Date</label>
-                            <input type="text" id="issuedate" name="issuedate" required>
+                            <input type="date" id="issuedate" name="issuedate" required>
                         </div>
                     </div>
                     
@@ -350,7 +350,7 @@
                         <textarea id="address" name="address" rows="3" required></textarea>
                     </div>
 
-                    <button type="submit" class="btn" id="submitBtn">💾 Save to Sheets</button>
+                    <button type="submit" class="btn" id="submitBtn">💾 Save </button>
                 </form>
             </div>
 
@@ -369,7 +369,7 @@
     </div>
 
     <script>
-        const backendURL = "http://localhost:3000";
+        const backendURL = "https://futurepathadvisor.com";
 
         // Submit form data
         document.getElementById("dataForm").addEventListener("submit", async (e) => {
@@ -399,11 +399,10 @@
                     showStatus(`❌ Failed to submit data: ${result.error || 'Unknown error'}`, "error");
                 }
             } catch (err) {
-                console.error("Error:", err);
                 showStatus("⚠️ Error submitting data. Please check if the server is running.", "error");
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '💾 Save to Sheets';
+                submitBtn.innerHTML = '💾 Save to DataBase';
             }
         });
 

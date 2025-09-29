@@ -460,29 +460,15 @@
       btnText.style.display = "none";
       loadingSpinner.style.display = "block";
 
-      // resultDiv.style.display = "block";
-      //resultDiv.className = "result loading";
-      // resultDiv.innerHTML = `
-      //   <div class="result-header">
-      //     <i class="fas fa-spinner fa-spin result-icon"></i>
-      //     <div class="result-title">Verifying Certificate...</div>
-      //   </div>
-      //   <p>Please wait while we verify your certificate in our secure database.</p>
-      // `;
+      
 
       try {
-        console.log(`Making request to: ${scriptURL}?certificateNo=${encodeURIComponent(certNo)}`);
 
-        // const res = await fetch(`${scriptURL}?certificateNo=${encodeURIComponent(certNo)}`);
-        // console.log('Response status:', res.status);
 
         const res = await fetch(`${scriptURL}?action=verify&certificateNo=${encodeURIComponent(certNo)}&key=MY_SECRET_KEY`);
         const data = await res.json();
 
-        //const data = await res.json();
-        console.log('Response data:', data);
-
-        // Store data for potential redirection
+        
         certificateData = data;
 
         if (data.valid) {
@@ -573,7 +559,6 @@
         }
 
       } catch (err) {
-        console.error('Error verifying certificate:', err);
         resultDiv.className = "result invalid";
         resultDiv.innerHTML = `
           <div class="result-header">
